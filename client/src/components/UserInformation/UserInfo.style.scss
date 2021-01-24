@@ -1,0 +1,20 @@
+.user {
+  width: 20%;
+	background: #343a40;
+	border-right: 2px solid #eaeaea;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  border-bottom: 2px solid #eaeaea;
+  
+	&__text {
+		color: #eaeaea;
+		display: flex;
+		flex-direction: column;
+		margin-left: 1rem;
+	}
+	img {
+    width: 30%;
+    cursor: pointer;
+	}
+}

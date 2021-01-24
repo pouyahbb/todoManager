@@ -1,0 +1,23 @@
+.taskComplete {
+	h3 {
+		display: flex;
+		justify-content: center;
+		border-bottom: 1px solid #eaeaea;
+		padding: 1rem;
+	}
+
+	&__lists {
+		margin-bottom: 1rem;
+	}
+	&__list {
+		list-style: none;
+	}
+	&__text {
+		color: #ccc;
+		font-size: 0.8rem;
+		margin-left: 1rem;
+  }
+  &__emptyMsg{
+    text-align: center;
+  }
+}

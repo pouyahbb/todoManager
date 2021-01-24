@@ -1,0 +1,15 @@
+.App{
+
+  &__header{
+    display:flex;
+  }
+
+  &__body{
+    display: flex;
+  }
+}
+
+body{
+  margin:.5rem;
+  background-color : #eaeaea;
+}

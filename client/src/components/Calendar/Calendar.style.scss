@@ -1,0 +1,27 @@
+.calendar {
+	width: 80%;
+	background-color: #343a40;
+	color: #eaeaea;
+	border-left: 2px solid #eaeaea;
+	text-align: center;
+
+	&__days {
+		tr {
+      font-size: 1.5rem;
+      cursor: pointer;
+			border: 1px solid #333;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			width: 20%;
+			margin: 0 auto;
+			border-radius: 4px;
+			margin-bottom: 2rem;
+		}
+
+		&--attachTask {
+			font-size: 0.6rem;
+			color: #333;
+		}
+	}
+}

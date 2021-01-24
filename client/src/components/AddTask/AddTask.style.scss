@@ -1,0 +1,33 @@
+.task {
+	width: 20%;
+	background-color: #343a40ea;
+	color: #eaeaea;
+
+	&__addTask {
+		height: 37.2vh;
+		overflow-y: auto;
+		border-bottom: 2px solid #eaeaea;
+		display: flex;
+		flex-direction: column;
+
+		&--lists {
+      margin-bottom: 1rem;
+		}
+		&--list {
+			list-style: none;
+		}
+		&--text {
+			color: #ccc;
+			font-size: 0.8rem;
+			margin-left: 1rem;
+		}
+		button {
+			margin: 1rem 0.5rem;
+		}
+	}
+
+	&__complete {
+		height: 37.2vh;
+		overflow-y: auto;
+	}
+}
