@@ -23,16 +23,16 @@ class CompleteTask extends Component {
 				)}
 				<Query query={GET_ALL_TASKS}>
 					{({ data, loading, error }) => {
-						let allTasks = data.getAllTask.filter((task) => {
-							return task.day < this.state.getCurrentDate
-						})
 						if (loading) return <Spinner animation='border' />
 						if (error)
-							return (
-								<Container>
+						return (
+							<Container>
 									<Alert variant='danger'> {error.message} </Alert>
 								</Container>
 							)
+							let allTasks = data.getAllTask.filter((task) => {
+								return task.day < this.state.getCurrentDate
+							})
 						if (allTasks.length === 0) {
 							return (
 								<Container>
