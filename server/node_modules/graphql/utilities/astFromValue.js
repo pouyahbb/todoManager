@@ -5,34 +5,30 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.astFromValue = astFromValue;
 
-var _isFinite = _interopRequireDefault(require("../polyfills/isFinite.js"));
+var _iterall = require("iterall");
 
-var _arrayFrom3 = _interopRequireDefault(require("../polyfills/arrayFrom.js"));
+var _objectValues3 = _interopRequireDefault(require("../polyfills/objectValues"));
 
-var _objectValues3 = _interopRequireDefault(require("../polyfills/objectValues.js"));
+var _inspect = _interopRequireDefault(require("../jsutils/inspect"));
 
-var _inspect = _interopRequireDefault(require("../jsutils/inspect.js"));
+var _invariant = _interopRequireDefault(require("../jsutils/invariant"));
 
-var _invariant = _interopRequireDefault(require("../jsutils/invariant.js"));
+var _isNullish = _interopRequireDefault(require("../jsutils/isNullish"));
 
-var _isObjectLike = _interopRequireDefault(require("../jsutils/isObjectLike.js"));
+var _isInvalid = _interopRequireDefault(require("../jsutils/isInvalid"));
 
-var _isCollection = _interopRequireDefault(require("../jsutils/isCollection.js"));
+var _isObjectLike = _interopRequireDefault(require("../jsutils/isObjectLike"));
 
-var _kinds = require("../language/kinds.js");
+var _kinds = require("../language/kinds");
 
-var _scalars = require("../type/scalars.js");
+var _scalars = require("../type/scalars");
 
-var _definition = require("../type/definition.js");
+var _definition = require("../type/definition");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * Produces a GraphQL Value AST given a JavaScript object.
- * Function will match JavaScript/JSON values to GraphQL AST schema format
- * by using suggested GraphQLInputType. For example:
- *
- *     astFromValue("value", GraphQLString)
+ * Produces a GraphQL Value AST given a JavaScript value.
  *
  * A GraphQL type must be provided, which will be used to interpret different
  * JavaScript values.
@@ -52,7 +48,7 @@ function astFromValue(value, type) {
   if ((0, _definition.isNonNullType)(type)) {
     var astValue = astFromValue(value, type.ofType);
 
-    if ((astValue === null || astValue === void 0 ? void 0 : astValue.kind) === _kinds.Kind.NULL) {
+    if (astValue && astValue.kind === _kinds.Kind.NULL) {
       return null;
     }
 
@@ -64,10 +60,10 @@ function astFromValue(value, type) {
     return {
       kind: _kinds.Kind.NULL
     };
-  } // undefined
+  } // undefined, NaN
 
 
-  if (value === undefined) {
+  if ((0, _isInvalid.default)(value)) {
     return null;
   } // Convert JavaScript array to GraphQL list. If the GraphQLType is a list, but
   // the value is not an array, convert the value using the list's item type.
@@ -76,19 +72,15 @@ function astFromValue(value, type) {
   if ((0, _definition.isListType)(type)) {
     var itemType = type.ofType;
 
-    if ((0, _isCollection.default)(value)) {
-      var valuesNodes = []; // Since we transpile for-of in loose mode it doesn't support iterators
-      // and it's required to first convert iteratable into array
-
-      for (var _i2 = 0, _arrayFrom2 = (0, _arrayFrom3.default)(value); _i2 < _arrayFrom2.length; _i2++) {
-        var item = _arrayFrom2[_i2];
+    if ((0, _iterall.isCollection)(value)) {
+      var valuesNodes = [];
+      (0, _iterall.forEach)(value, function (item) {
         var itemNode = astFromValue(item, itemType);
 
-        if (itemNode != null) {
+        if (itemNode) {
           valuesNodes.push(itemNode);
         }
-      }
-
+      });
       return {
         kind: _kinds.Kind.LIST,
         values: valuesNodes
@@ -107,8 +99,8 @@ function astFromValue(value, type) {
 
     var fieldNodes = [];
 
-    for (var _i4 = 0, _objectValues2 = (0, _objectValues3.default)(type.getFields()); _i4 < _objectValues2.length; _i4++) {
-      var field = _objectValues2[_i4];
+    for (var _i2 = 0, _objectValues2 = (0, _objectValues3.default)(type.getFields()); _i2 < _objectValues2.length; _i2++) {
+      var field = _objectValues2[_i2];
       var fieldValue = astFromValue(value[field.name], field.type);
 
       if (fieldValue) {
@@ -127,15 +119,15 @@ function astFromValue(value, type) {
       kind: _kinds.Kind.OBJECT,
       fields: fieldNodes
     };
-  } // istanbul ignore else (See: 'https://github.com/graphql/graphql-js/issues/2618')
+  }
 
-
+  /* istanbul ignore else */
   if ((0, _definition.isLeafType)(type)) {
     // Since value is an internally represented value, it must be serialized
     // to an externally represented value before converting into an AST.
     var serialized = type.serialize(value);
 
-    if (serialized == null) {
+    if ((0, _isNullish.default)(serialized)) {
       return null;
     } // Others serialize based on their corresponding JavaScript scalar types.
 
@@ -148,7 +140,7 @@ function astFromValue(value, type) {
     } // JavaScript numbers can be Int or Float values.
 
 
-    if (typeof serialized === 'number' && (0, _isFinite.default)(serialized)) {
+    if (typeof serialized === 'number') {
       var stringNum = String(serialized);
       return integerStringRegExp.test(stringNum) ? {
         kind: _kinds.Kind.INT,
@@ -182,11 +174,12 @@ function astFromValue(value, type) {
       };
     }
 
-    throw new TypeError("Cannot convert value to AST: ".concat((0, _inspect.default)(serialized), "."));
-  } // istanbul ignore next (Not reachable. All possible input types have been considered)
+    throw new TypeError("Cannot convert value to AST: ".concat((0, _inspect.default)(serialized)));
+  } // Not reachable. All possible input types have been considered.
 
 
-  false || (0, _invariant.default)(0, 'Unexpected input type: ' + (0, _inspect.default)(type));
+  /* istanbul ignore next */
+  (0, _invariant.default)(false, 'Unexpected input type: ' + (0, _inspect.default)(type));
 }
 /**
  * IntValue:

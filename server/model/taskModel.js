@@ -2,19 +2,20 @@ const mongoose = require('mongoose')
 
 const { Schema } = mongoose
 
-const TaskSchema = new Schema({
-  title : {
-    type : String,
-    required : [true , 'Please Provide a title for task.']
-  },
-  day : {
-    type : Number , 
-    required : [true , 'Please provide a day for task.'],
-    min : 0,
-    max : 30
-  }
+const taskSchema = new Schema({
+	title: {
+		type: String,
+		required: [true, 'Please provide a title for your task.'],
+	},
+	day: {
+		type: Number,
+		required: [true, 'Please provide a day for your task.'],
+		min: 0,
+		max: 30,
+		default : 1
+	},
 })
 
-const Task = mongoose.model('Task' , TaskSchema)
+const Task = mongoose.model('Task' , taskSchema)
 
-module.exports = Task
+module.exports = Task;

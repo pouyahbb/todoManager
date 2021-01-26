@@ -1,20 +1,20 @@
-const { ApolloServer } = require('apollo-server')
+const { GraphQLServer } = require('graphql-yoga')
+
+const typeDefs = require('./typeDefs')
 const resolvers = require('./resolvers')
-const typeDefs = require('./schema')
-const Task = require('./model/taskModel')
+const Task = require('./model/TaskModel')
 
 const connectDB = require('./db/connect')
 
 connectDB()
 
-const server = new ApolloServer({
+const PORT = 4000;
+
+const server = new GraphQLServer({
 	typeDefs,
-  resolvers,
-  context : { Task }
+	resolvers,
+	context: { Task },
 })
-
-const PORT = 5000
-
-server.listen(PORT, () => {
-	console.log(`Server runnin on port ${PORT}`)
-})
+server.start(PORT, () =>
+	console.log(`Server running on port ${PORT}`)
+)

@@ -1,7 +1,17 @@
 {
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "apollo-server": "^2.19.2",
-    "graphql-tag": "^2.11.0",
+    "graphql-yoga": "^1.18.3",
     "mongoose": "^5.11.13"
   }
 }
